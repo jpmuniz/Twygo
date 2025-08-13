@@ -4,7 +4,7 @@ class CourseRepository
   end
 
   def find(id)
-    Course.find(id)
+    Course.find_by(id: id)
   end
 
   def create(attrs)
@@ -12,7 +12,7 @@ class CourseRepository
   end
 
   def update(id, attributes)
-    course = Course.find_by(id: id)
+    course = find(id)
     return nil unless course
 
     course.update(attributes)
@@ -20,9 +20,22 @@ class CourseRepository
   end
 
   def delete(id)
-    course = Course.find_by(id: id)
+    course = find(id)
     return false unless course
+
     course.destroy
-    true
+    course.destroyed?
+  end
+
+  def attach_videos(id, videos)
+    course = find(id)
+    return nil unless course
+
+    course.videos.attach(videos)
+    course
+  end
+
+  def total_video_size
+    Course.all.sum { |c| c.videos.sum(&:byte_size) }
   end
 end
