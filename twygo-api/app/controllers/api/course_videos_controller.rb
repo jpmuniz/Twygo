@@ -30,6 +30,10 @@ module Api
       render json: { total_video_size_bytes: @service.all_courses_video_size }
     end
 
+    def courses_with_videos
+      render json: @service.courses_with_videos
+    end
+
     def all_videos
       videos = @service.all_videos
       video_urls = videos.map { |v| url_for(v) }

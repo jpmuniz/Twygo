@@ -17,6 +17,19 @@ class CourseVideoService
     course.videos
   end
 
+  def courses_with_videos
+    @repository.all.map do |course|
+      {
+        id: course.id,
+        title: course.title,
+        description: course.description,
+        end_date: course.end_date,
+        has_videos: course.videos.attached?,
+        videos: course.videos.map { |v| { filename: v.filename.to_s, byte_size: v.blob.byte_size, url: Rails.application.routes.url_helpers.rails_blob_url(v, only_path: true) } }
+      }
+    end
+  end
+
   def all_videos
     @repository.all.flat_map(&:videos)
   end
