@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         get  :show_videos    # GET  /api/course_videos/:id/show_videos
       end
       collection do
+        get :all_videos 
         get :video_sizes     # GET  /api/course_videos/video_sizes
       end
     end

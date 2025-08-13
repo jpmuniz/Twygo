@@ -35,6 +35,12 @@ class CourseRepository
     course
   end
 
+  def videos_for_course(course_id)
+    course = Course.find_by(id: course_id)
+    return nil unless course
+    course.videos
+  end
+
   def total_video_size
     Course.all.sum { |c| c.videos.sum(&:byte_size) }
   end

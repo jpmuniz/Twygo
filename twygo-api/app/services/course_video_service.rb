@@ -12,6 +12,12 @@ class CourseVideoService
   end
 
   def show_videos(course_id)
-    @repository.videos_for_course(course_id)
+    course = @repository.find(course_id)
+    return nil unless course
+    course.videos
+  end
+
+  def all_videos
+    @repository.all.flat_map(&:videos)
   end
 end
