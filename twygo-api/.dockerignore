@@ -43,3 +43,12 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+vendor/bundle
+node_modules/
+*.sqlite3
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo

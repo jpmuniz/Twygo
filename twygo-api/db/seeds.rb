@@ -1,9 +1,13 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+service = CourseService.new
+
+service.add_course(
+  title: "Ruby on Rails - Twygo",
+  description: "Curso básico de Rails",
+  end_date: Date.new(2025, 12, 31)
+)
+
+service.add_course(
+  title: "React + Rails - Twygo",
+  description: "Integração de frontend com backend",
+  end_date: Date.new(2025, 11, 30)
+)
