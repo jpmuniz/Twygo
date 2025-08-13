@@ -10,4 +10,12 @@ class CourseService
   def add_course(attrs)
     @repository.create(attrs)
   end
+
+  def update_course(id, attrs)
+    @repository.update(id, attrs)
+  end
+
+  def delete_course(id)
+    @repository.delete(id)
+  end
 end
