@@ -3,7 +3,7 @@ FROM node:20
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion && npm install
 
 COPY . .
 
