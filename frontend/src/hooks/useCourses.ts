@@ -1,26 +1,15 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { fetchCoursesAndVideos } from "../api/service";
 import type { Course } from "../types";
 
-export const useCourses = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const useCourses = () =>{
+  return useQuery<Course[]>({
+    queryKey: ["courses-with-videos"],
+    queryFn: fetchCoursesAndVideos,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
+}
 
-const getCourses = async () => {
-    try {
-     const data = await fetchCoursesAndVideos();
-     setCourses(data);
-    } catch {
-        setError("Erro ao buscar cursos");
-    } finally {
-        setLoading(false);
-    }
-};
-
-  useEffect(() => {
-    getCourses();
-  }, []);
-
-  return { courses, loading, error };
-};
+export { useCourses }

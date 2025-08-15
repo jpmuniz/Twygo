@@ -3,11 +3,13 @@ import {
   Box,
   Flex,
   Text,
-  IconButton,
-  AspectRatio
+  AspectRatio,
 } from "@chakra-ui/react";
-//import { TriangleRightIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { toaster } from "@/components/ui/toaster";
 import { TruncatedWithTooltip } from "./TruncatedWithTooltip";
+import { VideoActionButton } from "./VideoActionButton";
+import { useDeleteCourse } from "../hooks/useDeleteCourse";
+import { ConfirmDialog } from "./ConfirmDialog";
 import { truncate } from "./helpers";
 import type { Course } from "../types";
 
@@ -15,13 +17,15 @@ type CourseCardProps = {
   course: Course;
   onPlay: () => void; 
   onEdit?: () => void;
-  onDelete?: () => void;
 };
 
 
-const CourseCard = ({ course, onPlay, onEdit, onDelete }: CourseCardProps) => {
+const CourseCard = ({ course, onPlay, onEdit }: CourseCardProps) => {
   const vidRef = useRef<HTMLVideoElement | null>(null);
   const [hovered, setHovered] = useState(false);
+  const [isDelete, setIsDelete] = useState(false)
+
+  const { mutate: deleteCourse, isPending: deleting } = useDeleteCourse();
 
   const truncatedTitle = useMemo(() => truncate(course.title, 48), [course.title]);
   const truncatedDesc  = useMemo(() => truncate(course.description, 86), [course.description]);
@@ -34,6 +38,7 @@ const CourseCard = ({ course, onPlay, onEdit, onDelete }: CourseCardProps) => {
       role="group"
       position="relative"
       rounded="xl"
+      cursor="pointer"
       overflow="hidden"
       bg="gray.900"
       _hover={{ zIndex: 2, transform: "scale(1.06)" }}
@@ -96,37 +101,60 @@ const CourseCard = ({ course, onPlay, onEdit, onDelete }: CourseCardProps) => {
         pointerEvents={hovered ? "auto" : "none"}
         transition="opacity .15s ease"
       >
-        <IconButton
-          aria-label="Assistir"
-          //icon={<TriangleRightIcon />}
-          size="sm"
-          colorScheme="green"
-          onClick={(e) => {
-            e.stopPropagation();
-            onPlay();
-          }}
-        />
-        <IconButton
-          aria-label="Editar"
-          //icon={<EditIcon />}
-          size="sm"
-          variant="outline"
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit?.();
-          }}
-        />
-        <IconButton
-          aria-label="Excluir"
-          //icon={<DeleteIcon />}
-          size="sm"
-          variant="outline"
-          colorScheme="red"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete?.();
-          }}
-        />
+      <Flex
+        position="absolute"
+        top="20px"
+        left="30px"
+        gap="12px"
+        pointerEvents="auto"
+      >
+      <VideoActionButton
+        kind="play"
+        onClick={onPlay}
+        title="Play"
+        ariaLabel="Reproduzir"
+      />
+      <VideoActionButton
+        kind="edit"
+        onClick={onEdit}
+        title="Editar"
+        ariaLabel="Editar vídeo"
+      />
+      <VideoActionButton
+        kind="delete"
+        onClick={()=> setIsDelete(true)}
+        title="Excluir"
+        ariaLabel="Excluir vídeo"
+      />
+      <ConfirmDialog
+        open={isDelete}
+        title="Excluir vídeo"
+        description="Tem certeza que deseja excluir este vídeo? Essa ação não pode ser desfeita."
+        confirmLabel="Excluir"
+        cancelLabel="Cancelar"
+        confirmColorScheme="red"
+         isLoading={deleting}
+        onCancel={() => setIsDelete(false)}
+        onConfirm={() => {
+          deleteCourse(course.id, {
+            onSuccess: () => {
+            toaster.create({ 
+              title: "Curso excluído com sucesso", 
+              status: "success" 
+            });
+            },
+            onError: () => {
+              toaster.create({
+                title: "Erro ao tentar excluir o curso",
+                type: 'error',
+              })
+            },
+          });
+        }}
+      />
+
+    </Flex>
+
       </Flex>
     </Box>
   );

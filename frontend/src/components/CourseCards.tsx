@@ -7,11 +7,10 @@ import {
   DialogContent,
   DialogBody,
   DialogBackdrop,
-  IconButton,
   Portal
 } from "@chakra-ui/react";
-//import { CloseIcon } from "@chakra-ui/icons";
 import { CourseCard } from "./CourseCard";
+import { VideoActionButton } from "./VideoActionButton";
 
 type Video = {
   id: number | string;
@@ -27,15 +26,15 @@ type Course = {
   title: string;
   description?: string;
   videos: Video;
+  end_date: string
 };
 
 type Props = {
   courses: Course[];
   onEditVideo?: (v: Video) => void;
-  onDeleteVideo?: (v: Video) => void;
 };
 
-const CourseCards = ({ courses, onEditVideo, onDeleteVideo }: Props) => {
+const CourseCards = ({ courses, onEditVideo }: Props) => {
   const sortCourses = useMemo<Video[]>(
     () =>
       (courses ?? []).flatMap((course) =>
@@ -43,11 +42,12 @@ const CourseCards = ({ courses, onEditVideo, onDeleteVideo }: Props) => {
           ...video,
           title: course.title,
           description: course.description,
+          id: course.id,
+          end_date: course.end_date
         })) 
       ),
     [courses]
   );
-
   const [selected, setSelected] = useState<Video | null>(null);
 
   return (
@@ -63,7 +63,6 @@ const CourseCards = ({ courses, onEditVideo, onDeleteVideo }: Props) => {
             course={course}
             onPlay={() => setSelected(course)}
             onEdit={() => onEditVideo?.(course)}
-            onDelete={() => onDeleteVideo?.(course)}
           />
         ))}
       </SimpleGrid>
@@ -95,18 +94,19 @@ const CourseCards = ({ courses, onEditVideo, onDeleteVideo }: Props) => {
             zIndex={9999}
             boxShadow="none"
           >
-            <IconButton
-              aria-label="Fechar"
-              //icon={<CloseIcon boxSize={3} />}
-              position="absolute"
-              top={{ base: 3, md: 4 }}
-              right={{ base: 3, md: 4 }}
-              zIndex={2}
-              variant="ghost"
-              color="whiteAlpha.900"
-              _hover={{ bg: "whiteAlpha.200" }}
-              onClick={() => setSelected(null)}
-            />
+          <VideoActionButton
+            kind="close"
+            onClick={() => setSelected(null)}
+            title="Fechar"
+            ariaLabel="Fechar"
+            size={40}
+            iconSize={20}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+            }}
+          />
             <DialogBody p={0}>
               {selected && (
                 <Box

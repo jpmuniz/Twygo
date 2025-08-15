@@ -27,7 +27,7 @@ export const createCourse = async (data: Course) => {
   return handleResponse(res);
 };
 
-export const deleteCourse = async (id: number) => {
+export const deleteCourse = async (id: number | string) => {
   const res = await fetch(`${API_URL}/courses/${id}`, { method: "DELETE" });
   return handleResponse(res);
 };
