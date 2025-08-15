@@ -1,13 +1,16 @@
-export interface Video {
+export type Video = {
+  id: number | string;
   filename: string;
-  byte_size: number;
   url: string;
-}
+  byte_size: number;
+  courseTitle?: string;
+  courseDescription?: string;
+};
 
-export interface Course {
+export type Course = {
   id: number;
   title: string;
-  description?: string;
   end_date: string;
-  videos?: Video[];
-}
+  description?: string;
+  videos: Video;
+};

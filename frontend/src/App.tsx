@@ -1,13 +1,9 @@
-import './App.css'
+import { CourseGallery } from "./pages/CourseGallery";
 
-const App = () => {
+function App() {
   return (
-    <>
-      <p>
-        Twygo test
-      </p>
-    </>
-  )
+    <CourseGallery />
+  );
 }
 
-export default App
+export default App;

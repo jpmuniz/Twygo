@@ -3,9 +3,13 @@ FROM node:20
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion && npm install
+
+
+RUN npm install
+RUN npm install @chakra-ui/react@latest @chakra-ui/icons @emotion/react@latest @emotion/styled@latest framer-motion@latest
 
 COPY . .
 
 EXPOSE 5173
+
 CMD ["npm", "run", "dev", "--", "--host"]

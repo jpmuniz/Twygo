@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       end
     end
   end
-
+  get "videos/:id", to: "videos#show", as: :video
   # Sempre no final
   match "*unmatched", to: "application#route_not_found", via: :all
 end

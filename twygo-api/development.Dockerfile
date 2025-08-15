@@ -3,6 +3,13 @@ FROM ruby:3.4
 # Diretório da app dentro do container
 WORKDIR /var/app
 
+# Copia o entrypoint
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+
+# Usa o entrypoint
+ENTRYPOINT ["entrypoint.sh"]
+
 # Instalar dependências do sistema, incluindo sqlite3 e nodejs (para assets)
 RUN apt-get update -qq && apt-get install -y \
   build-essential \
