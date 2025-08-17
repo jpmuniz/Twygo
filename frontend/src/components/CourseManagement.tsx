@@ -30,8 +30,6 @@ const CourseManagement = () => {
     };
   };  
 
-  console.log("location", location);
-
   const isEdit = location.state?.editing === true;
   const initial = location.state?.initial;
   const [title, setTitle] = useState(initial?.title ?? "");
