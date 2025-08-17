@@ -18,7 +18,7 @@ export const updateCourse = async (id: number, data: Partial<Course>) => {
   return handleResponse(res);
 };
 
-export const createCourse = async (data: Course) => {
+export const createCourse = async (data: Partial<Course>) => {
   const res = await fetch(`${API_URL}/courses`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -32,16 +32,24 @@ export const deleteCourse = async (id: number | string) => {
   return handleResponse(res);
 };
 
-export const uploadVideos = async (id: number, files: FileList) => {
-  const formData = new FormData();
-  Array.from(files).forEach(file => formData.append("videos[]", file));
-
-  const res = await fetch(`${API_URL}/course_videos/${id}/upload`, {
+export async function uploadVideoFiles(courseId: number, files: FileList) {
+  const fd = new FormData();
+  Array.from(files).forEach((f) => fd.append("videos[]", f));
+  const res = await fetch(`${API_URL}/api/course_videos/${courseId}/upload`, {
     method: "POST",
-    body: formData,
+    body: fd,
   });
   return handleResponse(res);
-};
+}
+
+export async function uploadVideoByUrl(courseId: number, url: string) {
+  const res = await fetch(`${API_URL}/api/course_videos/${courseId}/upload`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ video_url: url }),
+  });
+  return handleResponse(res);
+}
 
 export const videosSizes = async () => {
   const res = await fetch(`${API_URL}/course_videos/video_sizes`);

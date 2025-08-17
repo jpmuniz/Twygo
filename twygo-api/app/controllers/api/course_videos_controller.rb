@@ -3,13 +3,27 @@ module Api
     before_action :set_service
 
     def upload
-      course = @service.attach_videos(params[:id], params[:videos])
-      if course
-        render json: { message: "Vídeos adicionados com sucesso!" }
-      else
-        render json: { error: "Curso não encontrado." }, status: :not_found
+      course = Course.find_by(id: params[:id])
+      return render json: { error: "Curso não encontrado." }, status: :not_found unless course
+
+      if params[:videos].present?
+        Array(params[:videos]).each do |file|
+          course.videos.attach(file)
+        end
+        return render json: { message: "Vídeos adicionados com sucesso!" }
       end
+
+      if params[:video_url].present?
+        url = params[:video_url].to_s
+        io = URI.open(url) # precisa require "open-uri"
+        filename = File.basename(URI.parse(url).path.presence || "video.mp4")
+        course.videos.attach(io: io, filename: filename, content_type: "video/mp4")
+        return render json: { message: "Vídeo anexado via URL com sucesso!" }
+      end
+
+      render json: { error: "Envie 'videos[]' ou 'video_url'." }, status: :unprocessable_entity
     end
+
 
     def show_videos
       videos = @service.show_videos(params[:id])
