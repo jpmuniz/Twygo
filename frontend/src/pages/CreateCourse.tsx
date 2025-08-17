@@ -1,40 +1,7 @@
 import { useState, type ChangeEvent } from "react";
 import { Box, Input, Textarea, Button, Text } from "@chakra-ui/react";
-import {
-  createCourse as createCourseApi,
-  uploadVideoByUrl,
-  uploadVideoFiles,
-} from "../api/service";
-
-function brToIso(br: string): string | null {
-  const trimmed = br.trim();
-  const m = trimmed.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!m) return null;
-
-  const [, ddStr, mmStr, yyyyStr] = m;
-  const dd = Number(ddStr);
-  const mm = Number(mmStr);
-  const yyyy = Number(yyyyStr);
-  if (mm < 1 || mm > 12 || dd < 1 || dd > 31) return null;
-
-  const iso = `${yyyyStr}-${mmStr}-${ddStr}`;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return null;
-
-  const sameDay = d.getUTCDate() === dd;
-  const sameMonth = d.getUTCMonth() + 1 === mm;
-  const sameYear = d.getUTCFullYear() === yyyy;
-  return sameDay && sameMonth && sameYear ? iso : null;
-}
-
-function isValidHttpUrl(url: string) {
-  try {
-    const u = new URL(url);
-    return u.protocol === "http:" || u.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
+import { useCreateCourseWithVideo } from "../hooks/useCreateCourseWithVideo";
+import { validateCreateCourse } from "./courseValidation";
 
 type Errors = {
   title?: string;
@@ -54,72 +21,36 @@ const CreateCourse = () => {
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
 
-  function validate(): boolean {
-    const e: Errors = {};
-
-    if (!title.trim()) e.title = "Título é obrigatório.";
-
-    if (!endDate.trim()) e.endDate = "Data de término é obrigatória.";
-    else if (!brToIso(endDate)) e.endDate = "Data inválida. Use dd/mm/aaaa (ex.: 31/12/2025).";
-
-    const hasFiles = !!(videoFiles && videoFiles.length > 0);
-    const hasUrl = !!videoUrl.trim();
-
-    if (!hasFiles && !hasUrl) {
-      e.video = "Envie ao menos um vídeo (arquivo ou URL).";
-    }
-
-    if (hasUrl && !isValidHttpUrl(videoUrl.trim())) {
-      e.videoUrl = "Informe uma URL válida (http/https).";
-    }
-
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }
-
-  async function createCourse(payload: {
-    title: string;
-    description?: string;
-    end_date: string;
-  }) {
-    const res = await createCourseApi(payload);
-    console.log(res)
-    if (!res.created_at) {
-      let msg = "Falha ao criar curso";
-      try {
-        const j = await res.json();
-        if (j?.errors) msg = Array.isArray(j.errors) ? j.errors.join(", ") : String(j.errors);
-        else if (j?.error) msg = j.error;
-      } catch {}
-      throw new Error(msg);
-    }
-    return res; 
-  }
-
-  async function onSubmit(e: React.FormEvent) {
+  const { run } = useCreateCourseWithVideo();
+  
+  const onSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     setFeedback(null);
-    if (!validate()) return;
+    const result = validateCreateCourse({
+      title,
+      description,
+      endDateBr: endDate,
+      videoUrl,
+      videoFiles,
+    });
 
-    const end_date_iso = brToIso(endDate)!;
+    if (!result.ok) {
+      setErrors(result.errors);
+      return;
+    }    
+
     setSubmitting(true);
     try {
-      const created = await createCourse({
+ 
+    await run({
+    course: {
         title: title.trim(),
         description: description.trim() || undefined,
-        end_date: end_date_iso,
-      });
-
-      const id: number | undefined = created?.id;
-      if (!id) throw new Error("Curso criado mas ID não retornado pela API.");
-
-      if (videoFiles && videoFiles.length > 0) {
-        await uploadVideoFiles(id, videoFiles);
-      }
-
-      if (videoUrl.trim()) {
-        await uploadVideoByUrl(id, videoUrl.trim());
-      }
+        end_date: endDate, 
+    },
+    videoFiles,  
+    videoUrl: videoUrl.trim(), 
+    });
 
       setFeedback({ kind: "ok", msg: "Curso criado e vídeo anexado com sucesso!" });
 
@@ -136,7 +67,7 @@ const CreateCourse = () => {
     }
   }
 
-  function onChangeFiles(ev: ChangeEvent<HTMLInputElement>) {
+  const onChangeFiles = (ev: ChangeEvent<HTMLInputElement>) => {
     setVideoFiles(ev.currentTarget.files);
     setErrors((p) => ({ ...p, video: undefined }));
   }
@@ -148,7 +79,6 @@ const CreateCourse = () => {
       </Text>
 
       <form onSubmit={onSubmit} noValidate>
-        {/* Título */}
         <Box mb={4}>
           <Text mb={1} fontWeight="semibold">
             Título *

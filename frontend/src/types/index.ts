@@ -14,3 +14,10 @@ export type Course = {
   description?: string;
   videos: Video;
 };
+
+export type CreateCoursePayload = {
+  id: number;
+  title: string;
+  end_date: string;
+  description?: string;
+}
