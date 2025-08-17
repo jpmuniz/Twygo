@@ -65,8 +65,7 @@ const VideoActionButton = ({
         alignItems: "center",
         justifyContent: "center",
         cursor: "pointer",
-        zIndex: 10000,
-        // sombras e hover suaves
+        zIndex: 999,
         boxShadow: "0 2px 10px rgba(0,0,0,.35)",
         transition: "transform .12s ease, background-color .12s ease, opacity .12s ease",
         ...style,

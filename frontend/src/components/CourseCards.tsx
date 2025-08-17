@@ -9,6 +9,7 @@ import {
   DialogBackdrop,
   Portal
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import { CourseCard } from "./CourseCard";
 import { VideoActionButton } from "./VideoActionButton";
 
@@ -30,12 +31,14 @@ type Course = {
 };
 
 type Props = {
-  courses: Course[];
-  onEditVideo?: (v: Video) => void;
+  course: Course[];
+  onEditVideo?: (course: Course) => void;
 };
 
 const CourseCards = ({ courses, onEditVideo }: Props) => {
-  const sortCourses = useMemo<Video[]>(
+   const navigate = useNavigate();
+   
+  const sortCourses = useMemo<Course[]>(
     () =>
       (courses ?? []).flatMap((course) =>
         (course.videos ?? []).map((video: Course) => ({
@@ -62,7 +65,18 @@ const CourseCards = ({ courses, onEditVideo }: Props) => {
             key={`${course.id}-${course.filename}`}
             course={course}
             onPlay={() => setSelected(course)}
-            onEdit={() => onEditVideo?.(course)}
+            onEdit={() => onEditVideo(navigate(`/courses/${course.id}/edit`, {
+                          state: {
+                            editing: true,
+                            initial: {
+                            id: course.id,  
+                            title: course.title,
+                            description: course.description,
+                            endDate: course.end_date, 
+                            url: course.url,
+                            },
+                          },  
+                    }))}
           />
         ))}
       </SimpleGrid>

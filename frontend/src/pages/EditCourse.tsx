@@ -1,6 +1,7 @@
 
 import { CourseManagement } from "../components/CourseManagement";
 
-export const  CreateCourse =()=> {
+export const EditCoursePage = () => {
+
   return <CourseManagement />;
 }

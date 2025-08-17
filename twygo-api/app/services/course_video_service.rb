@@ -18,7 +18,7 @@ class CourseVideoService
   end
 
 def courses_with_videos
-  @repository.all.map do |course|
+  @repository.upcoming.map do |course|
     {
       id: course.id,
       title: course.title,

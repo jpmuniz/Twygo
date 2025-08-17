@@ -9,7 +9,7 @@ export const fetchCourses = async (): Promise<Course[]> => {
   return handleResponse(res);
 };
 
-export const updateCourse = async (id: number, data: Partial<Course>) => {
+export const updateCourse = async (id: number | string, data: Partial<Course>) => {
   const res = await fetch(`${API_URL}/courses/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -32,7 +32,7 @@ export const deleteCourse = async (id: number | string) => {
   return handleResponse(res);
 };
 
-export async function uploadVideoFiles(courseId: number, files: FileList) {
+export async function uploadVideoFiles(courseId: number | string, files: FileList) {
   const fd = new FormData();
   Array.from(files).forEach((f) => fd.append("videos[]", f));
   const res = await fetch(`${API_URL}/course_videos/${courseId}/upload`, {
@@ -42,7 +42,7 @@ export async function uploadVideoFiles(courseId: number, files: FileList) {
   return handleResponse(res);
 }
 
-export async function uploadVideoByUrl(courseId: number, url: string) {
+export async function uploadVideoByUrl(courseId: number | string, url: string) {
   const res = await fetch(`${API_URL}/course_videos/${courseId}/upload`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

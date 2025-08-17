@@ -8,6 +8,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<Navigate to="/videos" replace />} />
       <Route path="/create" element={<CreateCourse />} />
+      <Route path="/courses/:id/edit" element={<CreateCourse />} />
       <Route path="/videos" element={<CourseGallery />} />
       <Route path="*" element={<Navigate to="/videos" replace />} />
     </Routes>

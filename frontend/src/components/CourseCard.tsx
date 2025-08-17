@@ -5,7 +5,6 @@ import {
   Text,
   AspectRatio,
 } from "@chakra-ui/react";
-import { toaster } from "@/components/ui/toaster";
 import { TruncatedWithTooltip } from "./TruncatedWithTooltip";
 import { VideoActionButton } from "./VideoActionButton";
 import { useDeleteCourse } from "../hooks/useDeleteCourse";
@@ -23,7 +22,7 @@ type CourseCardProps = {
 const CourseCard = ({ course, onPlay, onEdit }: CourseCardProps) => {
   const vidRef = useRef<HTMLVideoElement | null>(null);
   const [hovered, setHovered] = useState(false);
-  const [isDelete, setIsDelete] = useState(false)
+  const [isDelete, setIsDelete] = useState(false);
 
   const { mutate: deleteCourse, isPending: deleting } = useDeleteCourse();
 
@@ -138,16 +137,8 @@ const CourseCard = ({ course, onPlay, onEdit }: CourseCardProps) => {
         onConfirm={() => {
           deleteCourse(course.id, {
             onSuccess: () => {
-            toaster.create({ 
-              title: "Curso excluído com sucesso", 
-              status: "success" 
-            });
             },
             onError: () => {
-              toaster.create({
-                title: "Erro ao tentar excluir o curso",
-                type: 'error',
-              })
             },
           });
         }}

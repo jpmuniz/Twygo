@@ -3,6 +3,13 @@ class CourseRepository
     Course.all
   end
 
+  def upcoming
+     Course
+       .with_attached_videos                  
+       .where('end_date >= ?', Date.current)  
+       .order(end_date: :asc, id: :desc)      
+   end
+
   def find(id)
     Course.find_by(id: id)
   end

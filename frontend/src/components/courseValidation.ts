@@ -47,7 +47,7 @@ export const isValidHttpUrl = (url: string) => {
 
 export type ValidateResult =
   | {
-      ok: true;
+      success: true;
       errors: {};
       payload: {                
         title: string;
@@ -60,7 +60,7 @@ export type ValidateResult =
         | { kind: "none" };
     }
   | {
-      ok: false;
+      success: false;
       errors: CreateCourseFormErrors;
     };
 
@@ -92,7 +92,7 @@ const validateCreateCourse = (values: CreateCourseFormValues): ValidateResult  =
   }
 
   if (Object.keys(errors).length > 0) {
-    return { ok: false, errors };
+    return { success: false, errors };
   }
 
   const end_date = isValidDate(endDateBr)!;
@@ -107,7 +107,7 @@ const validateCreateCourse = (values: CreateCourseFormValues): ValidateResult  =
   }
 
   return {
-    ok: true,
+    success: true,
     errors: {},
     payload: { title, description, end_date },
     videoSource,

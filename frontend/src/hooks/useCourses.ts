@@ -9,6 +9,7 @@ const useCourses = () =>{
     staleTime: 60_000,
     refetchOnWindowFocus: false,
     retry: 1,
+    select: (data: Course) => [...data].reverse(),
   });
 }
 

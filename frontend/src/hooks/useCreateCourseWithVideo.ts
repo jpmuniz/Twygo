@@ -1,4 +1,3 @@
-// src/hooks/useCreateCourseWithVideo.ts
 import { useCreateCourse } from "./useCreateCourse";
 import { useAttachVideoByUrl, useAttachVideoFiles } from "./useAttachVideo";
 import type { Course } from "../types"
