@@ -35,7 +35,7 @@ export const deleteCourse = async (id: number | string) => {
 export async function uploadVideoFiles(courseId: number, files: FileList) {
   const fd = new FormData();
   Array.from(files).forEach((f) => fd.append("videos[]", f));
-  const res = await fetch(`${API_URL}/api/course_videos/${courseId}/upload`, {
+  const res = await fetch(`${API_URL}/course_videos/${courseId}/upload`, {
     method: "POST",
     body: fd,
   });
@@ -43,7 +43,7 @@ export async function uploadVideoFiles(courseId: number, files: FileList) {
 }
 
 export async function uploadVideoByUrl(courseId: number, url: string) {
-  const res = await fetch(`${API_URL}/api/course_videos/${courseId}/upload`, {
+  const res = await fetch(`${API_URL}/course_videos/${courseId}/upload`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ video_url: url }),

@@ -43,7 +43,7 @@ type Errors = {
   videoUrl?: string;  
 };
 
-export default function CreateCoursePage() {
+const CreateCourse = () => {
   
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -83,7 +83,8 @@ export default function CreateCoursePage() {
     end_date: string;
   }) {
     const res = await createCourseApi(payload);
-    if (!res.ok) {
+    console.log(res)
+    if (!res.created_at) {
       let msg = "Falha ao criar curso";
       try {
         const j = await res.json();
@@ -92,7 +93,7 @@ export default function CreateCoursePage() {
       } catch {}
       throw new Error(msg);
     }
-    return res.json(); 
+    return res; 
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -238,3 +239,5 @@ export default function CreateCoursePage() {
     </Box>
   );
 }
+
+export { CreateCourse }

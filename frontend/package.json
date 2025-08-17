@@ -19,7 +19,8 @@
     "@tanstack/react-query-devtools": "^5.85.3",
     "framer-motion": "^12.23.12",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.1"
   },
   "devDependencies": {
     "@chakra-ui/cli": "^3.24.2",
