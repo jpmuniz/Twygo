@@ -5,6 +5,7 @@ import {
   Text,
   AspectRatio,
 } from "@chakra-ui/react";
+import { SmartVideo } from "./SmartVideo";
 import { TruncatedWithTooltip } from "./TruncatedWithTooltip";
 import { VideoActionButton } from "./VideoActionButton";
 import { useDeleteCourse } from "../hooks/useDeleteCourse";
@@ -52,19 +53,7 @@ const CourseCard = ({ course, onPlay, onEdit }: CourseCardProps) => {
         vidRef.current?.pause();
       }}
     >
-      <AspectRatio ratio={16 / 9}>
-        <Box
-          as="video"
-          ref={vidRef}
-          src={course.url}
-          muted
-          playsInline
-          loop
-          preload="metadata"
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
-      </AspectRatio>
-
+      <SmartVideo src={course.url} hoverPlay ratio={16/9} />
       <Box
         position="absolute"
         insetX={0}
