@@ -2,7 +2,7 @@ import { AspectRatio, Box, Skeleton } from "@chakra-ui/react";
 import React, { forwardRef, useRef, useState, useImperativeHandle } from "react";
 
 export type SmartVideoProps = {
-  src: string;
+  src: string | undefined;
   ratio?: number;                          
   controls?: boolean;                      
   hoverPlay?: boolean;                     

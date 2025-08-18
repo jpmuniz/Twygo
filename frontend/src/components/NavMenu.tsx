@@ -33,11 +33,11 @@ const NavMenu = () => {
           </CLink>
 
         <HStack spacing={{ base: 2, md: 4 }} wrap="wrap" justify={{ base: "center", md: "flex-end" }}>
-          <CLink as={NavLink} to="/create" color="white" {...linkProps}>
-            Criar curso
-          </CLink>
           <CLink as={NavLink} to="/videos" color="white" {...linkProps}>
             Página de vídeos
+          </CLink>          
+          <CLink as={NavLink} to="/create" color="white" {...linkProps}>
+            Criar curso
           </CLink>
           <CLink as={NavLink} to="/videosize" color="white" {...linkProps}>
             Relatório de vídeos

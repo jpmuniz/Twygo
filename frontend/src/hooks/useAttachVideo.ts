@@ -1,17 +1,6 @@
 // src/hooks/useAttachVideo.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { uploadVideoFiles, uploadVideoByUrl } from "../api/service";
-
-const useAttachVideoByUrl = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (vars: { courseId: number; url: string }) =>
-      uploadVideoByUrl(vars.courseId, vars.url),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["courses-with-videos"] });
-    },
-  });
-}
+import { uploadVideoFiles } from "../api/service";
 
 const useAttachVideoFiles = () => {
   const queryClient = useQueryClient();
@@ -24,4 +13,4 @@ const useAttachVideoFiles = () => {
   });
 }
 
-export {useAttachVideoByUrl, useAttachVideoFiles}
+export {useAttachVideoFiles}

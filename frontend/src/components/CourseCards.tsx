@@ -12,30 +12,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CourseCard } from "./CourseCard";
 import { VideoActionButton } from "./VideoActionButton";
-
-type Video = {
-  id: number | string;
-  filename: string;
-  url: string;
-  byte_size: number;
-  courseTitle?: string;
-  courseDescription?: string;
-};
-
-type Course = {
-  id: number;
-  title: string;
-  description?: string;
-  videos: Video;
-  end_date: string
-};
+import type { Course, CourseVideoItem } from "../types";
 
 type Props = {
-  course: Course[];
-  onEditVideo?: (course: Course) => void;
+  courses: Course[];
 };
 
-const CourseCards = ({ courses, onEditVideo }: Props) => {
+const CourseCards = ({ courses }: Props) => {
    const navigate = useNavigate();
    
   const sortCourses = useMemo<Course[]>(
@@ -51,7 +34,21 @@ const CourseCards = ({ courses, onEditVideo }: Props) => {
       ),
     [courses]
   );
-  const [selected, setSelected] = useState<Video | null>(null);
+  const [selected, setSelected] = useState<CourseVideoItem | null>(null);
+
+  const onEditVideo = (course: CourseVideoItem) => {
+    navigate(`/courses/${course.id}/edit`, {
+      state: {
+        editing: true,
+        initial: {
+          id: course.id,  
+          title: course.title,
+          description: course.description,
+          endDate: course.end_date
+        },
+      },  
+    })    
+  }
 
   return (
     <Box p={6}>
@@ -62,21 +59,10 @@ const CourseCards = ({ courses, onEditVideo }: Props) => {
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 5 }} gap={3}>
         {sortCourses.map((course) => (
           <CourseCard
-            key={`${course.id}-${course.filename}`}
+            key={`${course.id}-${course.title}`}
             course={course}
             onPlay={() => setSelected(course)}
-            onEdit={() => onEditVideo(navigate(`/courses/${course.id}/edit`, {
-                          state: {
-                            editing: true,
-                            initial: {
-                            id: course.id,  
-                            title: course.title,
-                            description: course.description,
-                            endDate: course.end_date, 
-                            url: course.url,
-                            },
-                          },  
-                    }))}
+            onEdit={() => onEditVideo(course)}
           />
         ))}
       </SimpleGrid>

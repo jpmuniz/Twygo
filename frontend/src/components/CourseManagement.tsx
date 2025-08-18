@@ -1,12 +1,11 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import { Box, Input, Textarea, Button, Text } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCreateCourseWithVideo } from "../hooks/useCreateCourseWithVideo";
 import { useEditCourse } from "../hooks/useEditCourse";
 import { validateCreateCourse } from "./courseValidation";
 import { validateEditCourse } from "./courseValidationEdit";
 import { brToIso, isoToBr } from "../utils/dateFormat";
-
 
 type Errors = {
   title?: string;
@@ -16,15 +15,15 @@ type Errors = {
 };
 
 const CourseManagement = () => {
-
+  const navigate = useNavigate();
   const location = useLocation() as {
     state?: {
       editing?: boolean;
       initial?: {
         id: number | string;
-        title?: string;
+        title: string;
         description?: string;
-        endDate?: string; 
+        endDate: string; 
         url?: string;
       };
     };
@@ -37,7 +36,6 @@ const CourseManagement = () => {
   const [endDate, setEndDate] = useState(
     initial?.endDate ? isoToBr(initial.endDate) : ""
   );
-  const [videoUrl, setVideoUrl] = useState("");
   const [videoFiles, setVideoFiles] = useState<FileList | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -49,10 +47,9 @@ const CourseManagement = () => {
  useEffect(() => {
    const init = location.state?.initial;
    if (!init) return;
-   setTitle(init.title ?? "");
+   setTitle(init.title);
    setDescription(init.description ?? "");
    setEndDate(isoToBr(init.endDate));
-   setVideoUrl(init.url ?? "");
 }, [location.state]);
 
 
@@ -64,7 +61,6 @@ const CourseManagement = () => {
       title,
       description,
       endDateBr: endDate,
-      videoUrl,
       videoFiles,
     };
 
@@ -85,18 +81,17 @@ const CourseManagement = () => {
             title: title.trim(),
             description: description.trim() || undefined,
             end_date: brToIso(endDate)!,
+            videoFiles,
           },
-          videoFiles,
-          videoUrl: videoUrl.trim(),
         });
 
         setFeedback({ kind: "ok", msg: "Curso criado e vídeo anexado com sucesso!" });
         setTitle("");
         setDescription("");
         setEndDate("");
-        setVideoUrl("");
         setVideoFiles(null);
         setErrors({});
+        navigate("/videos", { replace: true });
       }  
       if(isEdit) {
         runEdit(
@@ -107,14 +102,13 @@ const CourseManagement = () => {
               description: description.trim() || undefined,
               end_date: brToIso(endDate)!,
             },
-            videoFiles,
-            videoUrl: videoUrl.trim(),
+            videoFiles
           },
           {
             onSuccess: () => {
               setFeedback({ kind: "ok", msg: "Curso atualizado com sucesso!" });
               setVideoFiles(null);
-              setVideoUrl("");
+              navigate("/videos", { replace: true });
             },
             onError: (err: any) => {
               setFeedback({ kind: "err", msg: String(err?.message || err) });
@@ -186,17 +180,8 @@ const CourseManagement = () => {
         </Box>
 
         <Box mb={4}>
-          <Input
-            value={videoUrl}
-            onChange={(e) => {
-              setVideoUrl(e.target.value);
-              setErrors((p) => ({ ...p, video: undefined, videoUrl: undefined }));
-            }}
-            placeholder="https://exemplo.com/video.mp4"
-            type="url"
-          />
-          {(errors.video || errors.videoUrl) && (
-            <Text mt={1} color="red.500">{errors.video || errors.videoUrl}</Text>
+          {(errors.video) && (
+            <Text mt={1} color="red.500">{errors.video}</Text>
           )}
         </Box>
 

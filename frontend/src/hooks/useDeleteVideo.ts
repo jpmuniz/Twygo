@@ -8,6 +8,7 @@ export function useDeleteVideo() {
   return useMutation({
     mutationFn: async (id: number | string) => {
       const res = await deleteCourse(id);
+      console.log(res);
       if (!res.ok) {
         throw new Error(`Erro ${res.status} ao excluir o vídeo`);
       }
@@ -31,8 +32,10 @@ export function useDeleteVideo() {
       return { previous };
     },
 
-    onError: (_err: unknown, _vars: unknown, ctx: { previous: unknown; }) => {
-      if (ctx?.previous) queryClient.setQueryData(["courses-with-videos"], ctx.previous);
+    onError: (_err: unknown, _vars: unknown, context: { previous: unknown; }) => {
+      if (context?.previous) {
+        queryClient.setQueryData(["courses-with-videos"], context.previous);
+      }
     },
 
     onSettled: () => {
@@ -40,3 +43,4 @@ export function useDeleteVideo() {
     },
   });
 }
+

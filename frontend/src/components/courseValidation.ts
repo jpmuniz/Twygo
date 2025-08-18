@@ -48,16 +48,11 @@ export const isValidHttpUrl = (url: string) => {
 export type ValidateResult =
   | {
       success: true;
-      errors: {};
       payload: {                
         title: string;
         description?: string;
         end_date: string;       
       };
-      videoSource:
-        | { kind: "files"; files: FileList }
-        | { kind: "url"; url: string }
-        | { kind: "none" };
     }
   | {
       success: false;
@@ -85,7 +80,7 @@ const validateCreateCourse = (values: CreateCourseFormValues): ValidateResult  =
   const hasFiles = !!(files && files.length > 0);
   const hasUrl = !!url;
   if (!hasFiles && !hasUrl) {
-    errors.video = "Envie ao menos um vídeo (arquivo ou URL).";
+    errors.video = "Envie ao menos um vídeo";
   }
   if (hasUrl && !isValidHttpUrl(url)) {
     errors.videoUrl = "Informe uma URL válida (http/https).";
@@ -97,20 +92,11 @@ const validateCreateCourse = (values: CreateCourseFormValues): ValidateResult  =
 
   const end_date = isValidDate(endDateBr)!;
 
-  let videoSource: ValidateResult extends { ok: true } ? any : never;
-  if (hasFiles) {
-    videoSource = { kind: "files", files: files! };
-  } else if (hasUrl) {
-    videoSource = { kind: "url", url };
-  } else {
-    videoSource = { kind: "none" };
-  }
+  
 
   return {
     success: true,
-    errors: {},
     payload: { title, description, end_date },
-    videoSource,
   };
 }
 

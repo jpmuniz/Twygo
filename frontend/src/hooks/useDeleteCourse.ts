@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCourse } from "../api/service";
-import type { Course } from "../types";
+import type { Course, Video } from "../types";
 
 export function useDeleteCourse() {
   const queryClient = useQueryClient();

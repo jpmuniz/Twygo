@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchCoursesAndVideos } from "../api/service";
 import type { Course } from "../types";
 
-const useCourses = () =>{
+const useGetCourses = () =>{
   return useQuery<Course[]>({
     queryKey: ["courses-with-videos"],
     queryFn: fetchCoursesAndVideos,
@@ -13,4 +13,4 @@ const useCourses = () =>{
   });
 }
 
-export { useCourses }
+export { useGetCourses }

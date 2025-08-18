@@ -3,7 +3,7 @@ import {
   Box,
   Flex,
   Text,
-  AspectRatio,
+  Alert
 } from "@chakra-ui/react";
 import { SmartVideo } from "./SmartVideo";
 import { TruncatedWithTooltip } from "./TruncatedWithTooltip";
@@ -11,10 +11,10 @@ import { VideoActionButton } from "./VideoActionButton";
 import { useDeleteCourse } from "../hooks/useDeleteCourse";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { truncate } from "./helpers";
-import type { Course } from "../types";
+import type { CourseVideoItem } from "../types";
 
 type CourseCardProps = {
-  course: Course;
+  course: CourseVideoItem;
   onPlay: () => void; 
   onEdit?: () => void;
 };
@@ -125,8 +125,11 @@ const CourseCard = ({ course, onPlay, onEdit }: CourseCardProps) => {
         onCancel={() => setIsDelete(false)}
         onConfirm={() => {
           deleteCourse(course.id, {
-            onSuccess: () => {
-            },
+            onSuccess: () => (
+              <Alert.Root status="success">
+                <Alert.Title>Curso excluído com sucesso</Alert.Title>
+              </Alert.Root>
+            ),
             onError: () => {
             },
           });

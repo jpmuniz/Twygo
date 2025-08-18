@@ -1,8 +1,8 @@
 import { CourseCards } from "../components/CourseCards";
-import { useCourses } from "../hooks/useCourses"; 
+import { useGetCourses } from "../hooks/useGetCourses"; 
 
 const CourseGallery = () => {
-  const { data: courses, loading, error } = useCourses();
+  const { data: courses, loading, error } = useGetCourses();
   if (loading) return <div>Carregando...</div>;
   if (error) return <div>Erro ao carregar cursos</div>;
 
