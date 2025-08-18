@@ -41,7 +41,7 @@ const CourseManagement = () => {
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
 
-  const { run: runCreate } = useCreateCourseWithVideo();
+  const { mutateAsync: createAsync } = useCreateCourseWithVideo();
   const { mutate: runEdit } = useEditCourse();
 
  useEffect(() => {
@@ -76,13 +76,13 @@ const CourseManagement = () => {
     setSubmitting(true);
     try {
       if (!isEdit) {
-        await runCreate({
+        await createAsync({
           course: {
             title: title.trim(),
             description: description.trim() || undefined,
             end_date: brToIso(endDate)!,
-            videoFiles,
           },
+          videoFiles,
         });
 
         setFeedback({ kind: "ok", msg: "Curso criado e vídeo anexado com sucesso!" });

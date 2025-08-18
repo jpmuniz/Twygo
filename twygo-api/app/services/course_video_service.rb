@@ -36,7 +36,14 @@ def courses_with_videos
   end
 end
 
-
+  def replace_videos(id, files)
+    course = find(id)
+    return nil unless course
+    course.videos.purge
+    course.videos.attach(files)
+    course
+  end
+  
   def all_videos
     @repository.all.flat_map(&:videos)
   end

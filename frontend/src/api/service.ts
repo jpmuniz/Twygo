@@ -42,6 +42,21 @@ export async function uploadVideoFiles(courseId: number | string, files: FileLis
   return handleResponse(res);
 }
 
+export async function uploadEditCourseVideos(
+  courseId: number | string,
+  files: FileList
+): Promise<void> {
+  if (!files || files.length === 0) return;
+
+  const form = new FormData();
+  Array.from(files).forEach((file) => form.append("videos[]", file)); 
+
+  const res = await fetch(`${API_URL}/courses/${courseId}/replace_videos`, {
+    method: "POST",
+    body: form,
+  });
+  return handleResponse(res);
+}
 export async function uploadVideoByUrl(courseId: number | string, url: string) {
   const res = await fetch(`${API_URL}/course_videos/${courseId}/upload`, {
     method: "POST",

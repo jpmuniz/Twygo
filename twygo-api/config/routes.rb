@@ -2,8 +2,12 @@ Rails.application.routes.draw do
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  namespace :api do
-    resources :courses, only: [:index, :show, :create, :update, :destroy]
+    namespace :api do
+    resources :courses, only: [:index, :show, :create, :update, :destroy] do
+      member do
+        post :replace_videos  
+      end
+    end
 
     resources :course_videos, only: [] do
       member do

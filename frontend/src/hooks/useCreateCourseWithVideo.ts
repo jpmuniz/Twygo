@@ -1,35 +1,30 @@
-import { useCreateCourse } from "./useCreateCourse";
-import {useAttachVideoFiles } from "./useAttachVideo";
+// hooks/useCreateCourseWithVideo.ts
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createCourse, uploadVideoFiles } from "../api/service";
+import type { Course } from "../types";
 
-type Inputs = {
-  course :{
-    title: string,
-    description?: string,
-    end_date: string,             
-    videoFiles?: FileList | null;   
-  }
+type CreateInput = {
+  course: {
+    title: string;
+    end_date: string;        
+    description?: string;
+  };
+  videoFiles?: FileList | null;
 };
 
-const useCreateCourseWithVideo = () => {
-  const createCourse = useCreateCourse();
-  const attachFiles = useAttachVideoFiles();
+export function useCreateCourseWithVideo() {
+  const qc = useQueryClient();
 
-  const isPending =
-    createCourse.isPending || attachFiles.isPending;
-
-  async function run({ course }: Inputs) {
-
-    const created = await createCourse.mutateAsync(course);
-    const courseId = created.id;
-
-    if (course?.videoFiles && course?.videoFiles.length > 0) {
-      await attachFiles.mutateAsync({ courseId, files: course?.videoFiles });
-    } 
-
-    return created;
-  }
-
-  return { run, isPending, createCourse, attachFiles };
+  return useMutation<Course, Error, CreateInput>({
+    mutationFn: async ({ course, videoFiles }) => {
+      const created = await createCourse(course); 
+      if (videoFiles && videoFiles.length > 0) {
+        await uploadVideoFiles(created.id, videoFiles); 
+      }
+      return created;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["courses-with-videos"] });
+    },
+  });
 }
-
-export { useCreateCourseWithVideo }
