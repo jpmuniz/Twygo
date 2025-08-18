@@ -1,0 +1,26 @@
+# Git & editor
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+
+# Dependências locais
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+dist
+build
+coverage
+
+# Config/env locais
+.env
+.env.*
+!.env.example
+
+# SO/temp
+*.swp
+*.pid
