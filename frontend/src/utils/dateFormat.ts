@@ -24,3 +24,16 @@ export const  formatBytes = (bytes: number, decimals = 2): string => {
   return `${value} ${sizes[i]}`;
 }
 
+export const formatDate = (e: React.ChangeEvent<HTMLInputElement>): string => {
+  let value = e.target.value.replace(/\D/g, ""); 
+
+  if (value.length > 8) value = value.slice(0, 8);
+
+  if (value.length > 4) {
+    value = value.replace(/^(\d{2})(\d{2})(\d{0,4}).*/, "$1/$2/$3");
+  } else if (value.length > 2) {
+    value = value.replace(/^(\d{2})(\d{0,2})/, "$1/$2");
+  }
+
+  return value;
+}; 

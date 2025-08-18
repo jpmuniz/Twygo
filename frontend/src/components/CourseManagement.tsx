@@ -5,7 +5,7 @@ import { useCreateCourseWithVideo } from "../hooks/useCreateCourseWithVideo";
 import { useEditCourse } from "../hooks/useEditCourse";
 import { validateCreateCourse } from "./courseValidation";
 import { validateEditCourse } from "./courseValidationEdit";
-import { brToIso, isoToBr } from "../utils/dateFormat";
+import { brToIso, isoToBr, formatDate } from "../utils/dateFormat";
 
 type Errors = {
   title?: string;
@@ -165,7 +165,7 @@ const CourseManagement = () => {
           <Input
             value={endDate}
             onChange={(e) => {
-              setEndDate(e.target.value);
+              setEndDate(formatDate(e));
               setErrors((p) => ({ ...p, endDate: undefined }));
             }}
             placeholder="dd/mm/aaaa"

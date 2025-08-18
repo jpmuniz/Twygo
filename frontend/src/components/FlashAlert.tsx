@@ -25,6 +25,7 @@ const FlashAlert = ({
   onOpenChange,
   position = "top-right",
 }: FlashAlertProps) => {
+    
   useEffect(() => {
     if (!open || !duration) return;
     const t = setTimeout(() => onOpenChange(false), duration);
@@ -50,8 +51,8 @@ const FlashAlert = ({
         <Alert.Root status={status} variant="surface" w={{ base: "92vw", sm: "420px" }} rounded="md" shadow="lg">
           <Alert.Indicator />
           <Box flex="1" minW={0}>
-            <Alert.Title noOfLines={1}>{title}</Alert.Title>
-            {description && <Alert.Description noOfLines={3}>{description}</Alert.Description>}
+            <Alert.Title>{title}</Alert.Title>
+            {description && <Alert.Description>{description}</Alert.Description>}
           </Box>
           <IconButton aria-label="Fechar" variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
             ✕
