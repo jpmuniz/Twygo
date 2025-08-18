@@ -7,9 +7,11 @@ import {
   DialogContent,
   DialogBody,
   DialogBackdrop,
-  Portal
+  Portal,
+  Alert
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { FlashAlert } from "./FlashAlert";
 import { CourseCard } from "./CourseCard";
 import { VideoActionButton } from "./VideoActionButton";
 import type { Course, CourseVideoItem } from "../types";
@@ -35,7 +37,9 @@ const CourseCards = ({ courses }: Props) => {
     [courses]
   );
   const [selected, setSelected] = useState<CourseVideoItem | null>(null);
-
+  const [flashOpen, setFlashOpen] = useState(false);
+  const [flashStatus, setFlashStatus] = useState<"success" | "error">("success");
+  const [flashTitle, setFlashTitle] = useState("");
   const onEditVideo = (course: CourseVideoItem) => {
     navigate(`/courses/${course.id}/edit`, {
       state: {
@@ -55,7 +59,14 @@ const CourseCards = ({ courses }: Props) => {
       <Text fontSize="2xl" fontWeight="bold" mb={4}>
         Vídeos dos Cursos
       </Text>
-
+        <FlashAlert
+        open={flashOpen}
+        onOpenChange={setFlashOpen}
+        status={flashStatus}
+        title={flashTitle}
+        position="top-right"
+        duration={3000}
+      />
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 5 }} gap={3}>
         {sortCourses.map((course) => (
           <CourseCard
@@ -63,6 +74,11 @@ const CourseCards = ({ courses }: Props) => {
             course={course}
             onPlay={() => setSelected(course)}
             onEdit={() => onEditVideo(course)}
+            onDeleted={(status) => {
+              setFlashStatus(status);
+              setFlashTitle(status === "success" ? "Curso excluído com sucesso!" : "Erro ao excluir o curso.");
+              setFlashOpen(true);
+            }}
           />
         ))}
       </SimpleGrid>

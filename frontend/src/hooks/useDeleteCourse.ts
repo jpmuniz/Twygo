@@ -1,17 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCourse } from "../api/service";
-import type { Course, Video } from "../types";
+import type { Course } from "../types";
 
 export function useDeleteCourse() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (courseId: number | string) => {
-      const res = await deleteCourse(courseId)
-
-      if (!res.ok) {
-        throw new Error(`Erro ${res.status} ao excluir o curso`);
-      }
+      mutationFn: async (courseId: number | string) => {
+        await deleteCourse(courseId);   
       return { courseId };
     },
 
@@ -29,12 +25,11 @@ export function useDeleteCourse() {
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (_err: any, context: any) => {
+    onError: (_err: any, _vars: any, context: { previous?: Course[] }) => {
       if (context?.previous) {
         queryClient.setQueryData(["courses-with-videos"], context.previous);
       }
     },
-
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["courses-with-videos"] });
     },

@@ -75,7 +75,7 @@ export function ConfirmDialog({
               </Button>
               <Button
                 colorScheme={confirmColorScheme}
-                onClick={onConfirm}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onConfirm(); }}
                 loading={isLoading}
               >
                 {confirmLabel}

@@ -2,8 +2,7 @@ import { useRef, useState, useMemo } from "react";
 import {
   Box,
   Flex,
-  Text,
-  Alert
+  Text
 } from "@chakra-ui/react";
 import { SmartVideo } from "./SmartVideo";
 import { TruncatedWithTooltip } from "./TruncatedWithTooltip";
@@ -17,16 +16,17 @@ type CourseCardProps = {
   course: CourseVideoItem;
   onPlay: () => void; 
   onEdit?: () => void;
+  onDeleted?: (status: "success" | "error") => void; 
 };
 
 
-const CourseCard = ({ course, onPlay, onEdit }: CourseCardProps) => {
+const CourseCard = ({ course, onPlay, onEdit, onDeleted }: CourseCardProps) => {
   const vidRef = useRef<HTMLVideoElement | null>(null);
   const [hovered, setHovered] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
 
-  const { mutate: deleteCourse, isPending: deleting } = useDeleteCourse();
 
+  const { mutateAsync: doDelete, isPending: deleting } = useDeleteCourse();
   const truncatedTitle = useMemo(() => truncate(course.title, 48), [course.title]);
   const truncatedDesc  = useMemo(() => truncate(course.description, 86), [course.description]);
 
@@ -53,6 +53,7 @@ const CourseCard = ({ course, onPlay, onEdit }: CourseCardProps) => {
         vidRef.current?.pause();
       }}
     >
+
       <SmartVideo src={course.url} hoverPlay ratio={16/9} />
       <Box
         position="absolute"
@@ -123,16 +124,14 @@ const CourseCard = ({ course, onPlay, onEdit }: CourseCardProps) => {
         confirmColorScheme="red"
          isLoading={deleting}
         onCancel={() => setIsDelete(false)}
-        onConfirm={() => {
-          deleteCourse(course.id, {
-            onSuccess: () => (
-              <Alert.Root status="success">
-                <Alert.Title>Curso excluído com sucesso</Alert.Title>
-              </Alert.Root>
-            ),
-            onError: () => {
-            },
-          });
+        onConfirm={async () => {
+          try {
+            await doDelete(course.id);
+            onDeleted?.("success");
+            setIsDelete(false);
+          } catch {
+            onDeleted?.("error");
+          }
         }}
       />
 
