@@ -11,3 +11,16 @@ export const isoToBr = (iso: string): string => {
   const [, yyyy, mm, dd] = m;
   return `${dd}/${mm}/${yyyy}`;
 }
+
+
+export const  formatBytes = (bytes: number, decimals = 2): string => {
+  if (!bytes || bytes <= 0) return "0 B";
+
+  const k = 1024; 
+  const sizes = ["B", "KB", "MB", "GB", "TB", "PB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  const value = parseFloat((bytes / Math.pow(k, i)).toFixed(decimals));
+  return `${value} ${sizes[i]}`;
+}
+

@@ -51,7 +51,7 @@ export async function uploadVideoByUrl(courseId: number | string, url: string) {
   return handleResponse(res);
 }
 
-export const videosSizes = async () => {
+export const videosSize = async () => {
   const res = await fetch(`${API_URL}/course_videos/video_sizes`);
   return handleResponse(res);
 };

@@ -27,8 +27,10 @@ const NavMenu = () => {
         justify="space-between"
         gap={4}
         direction={{ base: "column", md: "row" }}
-      >
-        <Text fontWeight="bold" fontSize="lg">Twygo</Text>
+      > 
+          <CLink as={NavLink} to="/videos" color="white" {...linkProps}>
+              <Text fontWeight="bold" fontSize="lg">Twygo</Text>
+          </CLink>
 
         <HStack spacing={{ base: 2, md: 4 }} wrap="wrap" justify={{ base: "center", md: "flex-end" }}>
           <CLink as={NavLink} to="/create" color="white" {...linkProps}>
@@ -37,7 +39,7 @@ const NavMenu = () => {
           <CLink as={NavLink} to="/videos" color="white" {...linkProps}>
             Página de vídeos
           </CLink>
-          <CLink as={NavLink} to="/reports" color="white" {...linkProps}>
+          <CLink as={NavLink} to="/videosize" color="white" {...linkProps}>
             Relatório de vídeos
           </CLink>
         </HStack>
